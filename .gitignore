@@ -1,0 +1,12 @@
+.vscode
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.mo
+*.pot
+
+# Spyder project settings
+.spyderproject
+.spyproject
