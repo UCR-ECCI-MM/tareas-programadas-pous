@@ -6,7 +6,11 @@ TODO
 
 ## User Manual
 
-TODO
+python -m venv ./env/
+Windows: env\Scripts\activate.bat
+Linux: source env/activate
+pip install -r requirements.txt
+
 
 ### Requirements
 
