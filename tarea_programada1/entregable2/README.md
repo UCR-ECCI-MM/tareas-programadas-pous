@@ -8,12 +8,12 @@ Run the following commands on the console of the folder "entregable2" to create 
 
 ```
 python -m venv ./env/
-Windows: env\Scripts\activate.bat
-Linux: source env/activate
+Windows: \env\Scripts\activate.bat
+Linux: source env/bin/activate
 pip install ply
 ```
 
-Execute the file with ```python jeopardy_trainer-lexer.py```.
+Execute the file biggest file with ```python jeopardy_trainer-lexer.py .\datos\JEO3.json > output.txt```.
 
 ## Requirements
 
