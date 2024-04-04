@@ -5,7 +5,7 @@ from pathlib import Path
 import ply.lex as lex
 import sys
 
-# List of token names.   This is always required
+
 tokens = (
     # Symbols
     "LBRACKET", # [
@@ -13,22 +13,22 @@ tokens = (
     "LBRACE", # {
     "RBRACE", # }
     "COLON", # :
-    "COMMA",
-    "QUOTES",
-    # Big labels
+    "COMMA", # ,
+    "QUOTES", # "
+    # General labels
     "CATEGORIESLABEL", 
     "QUESTIONSLABEL", 
-    # Elements
-    "AIRDATE", # (20[01]\d|19[89]\d)-(0[1-9]|1[0-2])-([0-2]\d|3[01])
-    "VALUE", # \\d+
-    "SHOWNUMBER", #\d+
-    # "Tiny labels"
+    # Data
+    "AIRDATE", 
+    "VALUE",  
+    "SHOWNUMBER", 
+    # Specific labels
     "CATEGORYLABEL",
     "AIRDATELABEL",
     "QUESTIONLABEL",
     "VALUELABEL",
     "ANSWERLABEL",
-    "ROUNDLABEL", #round
+    "ROUNDLABEL",
     "SHOWNUMLABEL",
     "TEXT",
 )
@@ -98,11 +98,11 @@ def t_RBRACE(t):
     return t
 
 def t_AIRDATE(t):
-    r'(20[01]\d|19[89]\d)-(0[1-9]|1[0-2])-([0-2]\d|3[01])'
+    r'(20[01]\d|19[89]\d)-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[01])'
     return t
 
 def t_VALUE(t):
-    r'\\d+'
+    r'\$\d+'
     return t
 
 def t_SHOWNUMBER(t):
@@ -110,7 +110,7 @@ def t_SHOWNUMBER(t):
     return t
 
 def t_TEXT(t):
-    r'.+?(?=(?<!\\)")' # Check
+    r'.+?(?=(?<!\\)")'
     return t
 
 # Define a rule so we can track line numbers
