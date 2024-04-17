@@ -128,35 +128,4 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
-
-def get_file_content(path):
-    # Get the parent directory of the current script and add the data file name
-    file_path = Path(__file__).parent / path
-    # Get content from the file and return it as a string
-    try:
-        return open(file_path, "r", encoding="utf8").read()
-    except FileNotFoundError:
-        return f"'{file_path}' not found."
-
-
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <path>")
-        return
-
-    path = sys.argv[1]
-    # Build the lexer
-    lexer = lex.lex()
-
-    data = get_file_content(path)
-
-    lexer.input(data)
-
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break  # No more input
-        print(tok)
-
-if __name__ == "__main__":
-    main()
+lexer = lex.lex()
