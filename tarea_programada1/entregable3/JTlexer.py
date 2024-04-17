@@ -20,8 +20,8 @@ tokens = (
     # Data
     "AIRDATE", 
     "VALUE",  
-    "SHOWNUMBER", 
-    "ROUND",
+    "SHOWNUMBER",
+    "ROUND", 
     # Specific labels
     "CATEGORYLABEL",
     "AIRDATELABEL",
@@ -94,17 +94,17 @@ def t_RBRACE(t):
     return t
 
 def t_AIRDATE(t):
-    r'"(20[0-2]\d|19[89]\d)-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[01])"' # 1980-2029
+    r'\"(20[012]\d|19[89]\d)-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[01])\"'
     return t
 
 def t_VALUE(t):
-    r'"\$\d+"|null'
+    r'\"\$(\d+|\,)+\"|null'
     if t.value == 'null':
-        t.value = '$0'
+        t.value = "$0"
     return t
 
 def t_SHOWNUMBER(t):
-    r'"\d+"'
+    r'\"\d+\"'
     return t
 
 def t_ROUND(t):
@@ -112,7 +112,7 @@ def t_ROUND(t):
     return  t
 
 def t_TEXT(t):
-    r'".+?(?=(?<!\\)")"'
+    r'\".+?(?=(?<!\\)")\"'
     return t
 
 # Define a rule so we can track line numbers
