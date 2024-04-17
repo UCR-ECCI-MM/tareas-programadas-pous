@@ -25,15 +25,15 @@ def p_question(t):
     question : LBRACE CATEGORYLABEL COLON TEXT COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON TEXT COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE
              | LBRACE CATEGORYLABEL COLON TEXT COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON TEXT COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE COMMA question
     '''
+    if t[0] is None:
+        t[0] = ""
+        
     if len(t) == 30:
         for i in range(1, 30):
-            #t[0]  += t[i]
-            pass
+            t[0]  += t[i]
     elif len(t) == 32:
         for i in range(1, 32):
-            #t[0]  += t[i]
-            pass
-        print(t[31])
+            t[0]  += t[i]
 
 
 
