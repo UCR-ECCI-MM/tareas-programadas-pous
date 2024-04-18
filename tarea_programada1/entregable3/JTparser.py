@@ -8,37 +8,46 @@ from JTlexer import tokens
 
 
 def p_file(t):
-    'file : LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON  LBRACKET question RBRACKET RBRACE'
+    'file : LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON  LBRACKET questions RBRACKET RBRACE'
     t[0] = t[1] + t[2] + t[3] + t[4] + t[5] + t[6] + t[7] + t[8] + t[9] + t[10] + t[11] + t[12] + t[13] 
 
 def p_categories(t):
     '''categories : TEXT
-    | SHOWNUMBER
+    | NUMBER
     | TEXT COMMA categories
-    | SHOWNUMBER COMMA categories'''
+    | NUMBER COMMA categories'''
     if len(t) == 2:
         t[0] = t[1]
     else:
         t[0] = t[1] + t[2]
 
+def p_questions(t):
+    '''questions : question
+                | question COMMA questions'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] + t[2] + t[3]
 
 def p_question(t):
-    '''
-    question : LBRACE CATEGORYLABEL COLON TEXT COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON TEXT COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE
-             | LBRACE CATEGORYLABEL COLON TEXT COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON TEXT COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE COMMA question
-             | LBRACE CATEGORYLABEL COLON SHOWNUMBER COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON SHOWNUMBER COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE
-             | LBRACE CATEGORYLABEL COLON SHOWNUMBER COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA ANSWERLABEL COLON SHOWNUMBER COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON SHOWNUMBER RBRACE COMMA question
-    '''
+    '''question : LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE'''
     if t[0] is None:
         t[0] = ""
-        
-    if len(t) == 30:
-        for i in range(1, 30):
-            t[0]  += t[i]
-    elif len(t) == 32:
-        for i in range(1, 32):
-            t[0]  += t[i]
+    for i in range(1, 25):
+        print(t[i])
+        t[0] += t[i]
 
+def p_category(t):
+    '''category : CATEGORYLABEL COLON TEXT
+             | CATEGORYLABEL COLON NUMBER
+             | CATEGORYLABEL COLON VALUE'''
+    t[0] = t[1] + t[2] + t[3]
+
+def p_answer(t):
+    '''answer : ANSWERLABEL COLON TEXT
+           | ANSWERLABEL COLON NUMBER
+           | ANSWERLABEL COLON VALUE'''
+    t[0] = t[1] + t[2] + t[3]
 
 
 def p_error(p):

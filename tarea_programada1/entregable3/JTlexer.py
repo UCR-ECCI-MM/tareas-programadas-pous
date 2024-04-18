@@ -20,7 +20,7 @@ tokens = (
     # Data
     "AIRDATE", 
     "VALUE",  
-    "SHOWNUMBER",
+    "NUMBER",
     "ROUND", 
     # Specific labels
     "CATEGORYLABEL",
@@ -103,7 +103,7 @@ def t_VALUE(t):
         t.value = "$0"
     return t
 
-def t_SHOWNUMBER(t):
+def t_NUMBER(t):
     r'\"\d+\"'
     return t
 
