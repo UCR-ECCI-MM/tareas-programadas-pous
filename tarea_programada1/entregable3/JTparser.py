@@ -68,7 +68,7 @@ def p_error(p):
 
 def main():
     if len(sys.argv) != 3:
-        print("Usage: python script.py <input_path> <output_path")
+        print("Usage: python script.py <input_path> <output_path>")
         return
 
     input_path = sys.argv[1]
