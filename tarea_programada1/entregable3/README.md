@@ -13,7 +13,7 @@ Linux: source env/bin/activate
 pip install ply
 ```
 
-Execute the biggest file with ```python JTparser.py .\datos\JEO3.json > output.txt```.
+Execute the biggest file with ```python JTparser.py datos/JEO3.json output.txt```.
 
 On the `output.txt` file you'll find all the tokens read, and on the `parser.out` file you can check all the details about the parser process.
 
