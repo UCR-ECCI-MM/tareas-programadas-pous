@@ -11,6 +11,11 @@ from JTquestions import Questions
 categories = Categories()
 questions = Questions()
 
+def clean_text(text):
+    cleaned_text = text.replace('\\"', '"')
+    cleaned_text = cleaned_text.replace("\\'", "'")
+    return cleaned_text
+
 def get_file_content(path):
     file_path = Path(__file__).parent / path
     try:
@@ -27,11 +32,9 @@ def p_categories(t):
     | TEXT COMMA categories
     | NUMBER COMMA categories'''
     if len(t) == 2:
-        clean_string = t[1]
-        categories.add_value(clean_string)
+        categories.add_value(clean_text(t[1]))
     else:
-        clean_string = t[1]
-        categories.add_value(clean_string)
+        categories.add_value(clean_text(t[1]))
 
 def p_questions(t):
     '''questions : question
@@ -40,7 +43,7 @@ def p_questions(t):
 def p_question(t):
     '''question : LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE'''
     questions.add_air_date(t[6])
-    questions.add_question(t[10])
+    questions.add_question(clean_text(t[10]))
     questions.add_value(t[14])
     questions.add_round(t[20])
     questions.add_show_number(t[24])
@@ -49,25 +52,24 @@ def p_category(t):
     '''category : CATEGORYLABEL COLON TEXT
              | CATEGORYLABEL COLON NUMBER
              | CATEGORYLABEL COLON VALUE'''
-    questions.add_category(t[3])
+    questions.add_category(clean_text(t[3]))
 
 def p_answer(t):
     '''answer : ANSWERLABEL COLON TEXT
            | ANSWERLABEL COLON NUMBER
            | ANSWERLABEL COLON VALUE'''
-    questions.add_answer(t[3])
+    questions.add_answer(clean_text(t[3]))
 
 
 def p_error(p):
     print(f'Syntax error at line {p.lineno}: {p.value}')
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python script.py <input_path> <output_path")
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <input_path>")
         return
 
     input_path = sys.argv[1]
-    output_path = sys.argv[2]
 
     parser = yacc.yacc()
     data = get_file_content(input_path)
