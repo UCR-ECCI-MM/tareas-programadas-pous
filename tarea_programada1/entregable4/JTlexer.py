@@ -59,6 +59,7 @@ def t_VALUELABEL(t):
 
 def t_ANSWERLABEL(t):
     r'"answer"'
+    t.value = t.value[1:-1]
     return t
 
 def t_ROUNDLABEL(t):
@@ -67,6 +68,7 @@ def t_ROUNDLABEL(t):
 
 def t_SHOWNUMLABEL(t):
     r'"show_number"'
+    t.value = t.value[1:-1]
     return t
 
 def t_COMMA(t):
@@ -95,20 +97,25 @@ def t_RBRACE(t):
 
 def t_AIRDATE(t):
     r'\"(20[012]\d|19[89]\d)-(0[1-9]|1[0-2])-(0[1-9]|[1-2]\d|3[01])\"'
+    t.value = t.value[1:-1]
     return t
 
 def t_VALUE(t):
     r'\"\$(\d+|\,)+\"|null'
     if t.value == 'null':
         t.value = "$0"
+    else:
+        t.value = t.value[1:-1]
     return t
 
 def t_NUMBER(t):
     r'\"\d+\"'
+    t.value = t.value[1:-1]
     return t
 
 def t_ROUND(t):
     r'"((Double\s|Final\s)?Jeopardy!|Tiebreaker)"'
+    t.value = t.value[1:-1]
     return  t
 
 def t_TEXT(t):

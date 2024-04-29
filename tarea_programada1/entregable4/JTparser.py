@@ -6,8 +6,10 @@ import ply.yacc as yacc
 import sys
 from JTlexer import tokens
 from JTcategories import Categories
+from JTquestions import Questions
 
 categories = Categories()
+questions = Questions()
 
 def get_file_content(path):
     file_path = Path(__file__).parent / path
@@ -16,15 +18,8 @@ def get_file_content(path):
     except FileNotFoundError:
         return f"'{file_path}' not found."
     
-def write_to_file(path, content):
-    file_path = Path(__file__).parent / path
-    file = open(file_path, "a", encoding="utf8")
-    file.write(content)
-    file.close()
-
 def p_file(t):
     'file : LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON  LBRACKET questions RBRACKET RBRACE'
-    t[0] = t[1] + t[2] + t[3] + t[4] + t[5] + t[6] + t[7] + t[8] + t[9] + t[10] + t[11] + t[12] + t[13] 
 
 def p_categories(t):
     '''categories : TEXT
@@ -32,41 +27,35 @@ def p_categories(t):
     | TEXT COMMA categories
     | NUMBER COMMA categories'''
     if len(t) == 2:
-        t[0] = t[1]
-        clean_string = t[1].replace("\\\"", "\"")
+        clean_string = t[1]
         categories.add_value(clean_string)
     else:
-        t[0] = t[1] + t[2]
-        clean_string = t[1].replace("\\\"", "\"")
+        clean_string = t[1]
         categories.add_value(clean_string)
 
 def p_questions(t):
     '''questions : question
                 | question COMMA questions'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] + t[2] + t[3]
 
 def p_question(t):
     '''question : LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE'''
-    if t[0] is None:
-        t[0] = ""
-    for i in range(1, 25):
-        # print(t[i])
-        t[0] += t[i]
+    questions.add_air_date(t[6])
+    questions.add_question(t[10])
+    questions.add_value(t[14])
+    questions.add_round(t[20])
+    questions.add_show_number(t[24])
 
 def p_category(t):
     '''category : CATEGORYLABEL COLON TEXT
              | CATEGORYLABEL COLON NUMBER
              | CATEGORYLABEL COLON VALUE'''
-    t[0] = t[1] + t[2] + t[3]
+    questions.add_category(t[3])
 
 def p_answer(t):
     '''answer : ANSWERLABEL COLON TEXT
            | ANSWERLABEL COLON NUMBER
            | ANSWERLABEL COLON VALUE'''
-    t[0] = t[1] + t[2] + t[3]
+    questions.add_answer(t[3])
 
 
 def p_error(p):
@@ -87,7 +76,8 @@ def main():
     categories.create_series()
     categories.save_csv()
     
-    # write_to_file(output_path, result)
+    questions.create_dataframe()
+    questions.save_csv()
 
 if __name__ == "__main__":
     main()
