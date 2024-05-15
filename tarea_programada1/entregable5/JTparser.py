@@ -24,8 +24,7 @@ class JTParser:
         yacc.parse(data)
         self.categories.create_series()
         self.questions.create_dataframe()
-        self.categories.save_csv()
-        self.questions.save_csv()
+        return self.categories, self.questions
         
 class JTAnalysis(JTParser):
     tokens = (
