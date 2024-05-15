@@ -60,7 +60,7 @@ class QuestionSearch(tk.Frame):
         self.search_label = tk.Label(self, text="Search", width=5, font=18)  
         self.search_label.grid(row=1, column=0, padx=2, pady=10)
 
-        self.entry_box = tk.Entry(self, width=120, bg="white", font=18)
+        self.entry_box = tk.Entry(self, width=80, bg="white", font=18)
         self.entry_box.grid(row=1, column=2, padx=1)
 
         self.search_button = tk.Button(self, text="Search", width=10, font=18, command=lambda: user_search())
@@ -72,20 +72,25 @@ class QuestionSearch(tk.Frame):
         
         self.table_tree = ttk.Treeview(self)
 
+        def refresh_table(self):
+            self.table_tree.delete(*self.table_tree.get_children())
+
         def user_search():
+            # Reset TreeView Table
+            refresh_table(self)
             query = self.entry_box.get().strip()
             # Create a boolean mask for each row where any column contains the query
             mask = questions.questions.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)
             matched_questions = questions.questions[mask]
             
-            self.table_tree["columns"] = list(questions.questions.columns)
+            self.table_tree["columns"] = list(matched_questions.columns)
             self.table_tree['show'] = 'headings'
             # Configure the columns and headings
-            for col in questions.questions.columns:
+            for col in matched_questions.columns:
                 self.table_tree.column(col, width=100, anchor='c')
                 self.table_tree.heading(col, text=col)
             # Insert the DataFrame rows into the Treeview
-            for index, row in questions.questions.iterrows():
+            for _, row in matched_questions.iterrows():
                 self.table_tree.insert('', 'end', values=list(row))
 
             # Place the Treeview on the grid
