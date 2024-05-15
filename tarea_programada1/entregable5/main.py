@@ -66,6 +66,9 @@ class QuestionSearch(tk.Frame):
         self.search_button = tk.Button(self, text="Search", width=10, font=18, command=lambda: user_search())
         self.search_button.grid(row=1, column=3, padx=2)
 
+        self.back_button = tk.Button(self, text="Volver", width=10, font=18, command=lambda: controller.show_frame(DataHub))
+        self.back_button.grid(row=1, column=4, padx=2)
+
         # Adapted from: https://stackoverflow.com/questions/48057591/cant-resize-treeview-with-grid-on-tkinter
         self.table_scrollbar = tk.Scrollbar(self)
         self.table_scrollbar.grid(row=2, column=5, sticky=tk.NS)
@@ -99,13 +102,6 @@ class QuestionSearch(tk.Frame):
 
             self.columnconfigure(0, weight=1) # column with treeview
             self.rowconfigure(2, weight=1) # row with treeview 
-
-        back_button = tk.Button(
-            self,
-            text="Volver",
-            command=lambda: controller.show_frame(DataHub),
-        )
-        back_button.grid(row=2, column=1, padx=5, pady=10)
         
 class DataHub(tk.Frame):
     def __init__(self, parent, controller):
