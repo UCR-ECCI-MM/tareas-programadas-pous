@@ -12,3 +12,8 @@ __pycache__/
 .spyproject
 
 env/
+
+# Game processing data
+*.csv
+*.out
+parsetab.py
