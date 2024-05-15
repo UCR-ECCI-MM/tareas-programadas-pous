@@ -1,6 +1,7 @@
 from JTparser import JTAnalysis
 import tkinter as tk
 from tkinter import filedialog
+import csv
 
 def read_file():
     file_path = filedialog.askopenfilename()
@@ -9,6 +10,19 @@ def read_file():
             file_content = file.read()
             analysis = JTAnalysis()
             analysis.run(file_content)
+
+def open_file(file_name):
+    result = []
+    with open(file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)
+        for item in reader:
+            result.append(item)
+    return result
+
+def play():
+    categories = open_file("categories.csv")
+    questions = open_file("questions.csv")
 
 root = tk.Tk()
  
