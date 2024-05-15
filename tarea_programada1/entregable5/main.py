@@ -68,6 +68,7 @@ class JT(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.wm_title("Jeopardy Trainer!")
+        self.geometry('1280x720')
         container = tk.Frame(self, height=720, width=1280)
         container.pack(side="top", fill="both", expand=True)
 
