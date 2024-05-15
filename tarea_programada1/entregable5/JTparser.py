@@ -5,7 +5,6 @@ from pathlib import Path
 import ply.yacc as yacc
 import ply.lex as lex
 import sys, os
-from JTlexer import tokens
 from JTcategories import Categories
 from JTquestions import Questions
 

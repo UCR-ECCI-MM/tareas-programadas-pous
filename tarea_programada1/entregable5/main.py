@@ -2,9 +2,6 @@ import tkinter as tk
 from tkinter import filedialog
 import csv
 from JTparser import JTAnalysis
-from pregame import Pregame
-from game import Game
-
 
 def read_file():
     file_path = filedialog.askopenfilename()
@@ -22,6 +19,36 @@ def open_file(file_name):
         for item in reader:
             result.append(item)
     return result
+
+class Game(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        back_button = tk.Button(
+            self,
+            text="Volver",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
+
+class Pregame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        questions_label = tk.Label(self, text="Cantidad de preguntas:")
+        questions_label.pack(pady=5)
+        entry_questions = tk.Entry(self)
+        entry_questions.pack(pady=5)
+        next_button = tk.Button(
+            self,
+            text="Siguiente",
+            command=lambda: controller.show_frame(Game),
+        )
+        next_button.pack(padx=10, pady=10)
+        back_button = tk.Button(
+            self,
+            text="Volver",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
