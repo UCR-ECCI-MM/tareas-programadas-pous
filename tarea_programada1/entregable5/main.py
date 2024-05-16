@@ -1,25 +1,20 @@
 import tkinter as tk
 from tkinter import filedialog
-import csv
 import os
 import pandas as pd
 from tkinter import ttk
 from JTparser import JTAnalysis
 
 filename = "Ningun archivo seleccionado"
-
-# TODO(Andres): Quitar
+questions_columns = ['Category', 'Air Date', 'Question', 'Value', 'Answer', 'Round', 'Show Number']
 categories = pd.DataFrame()
-questions = pd.DataFrame()
+questions = pd.DataFrame(columns=questions_columns)
+passed_questions = pd.DataFrame(columns=questions_columns)
+failed_questions = pd.DataFrame(columns=questions_columns)
 
-def open_file(file_name):
-    result = []
-    with open(file_name, newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader)
-        for item in reader:
-            result.append(item)
-    return result
+def on_close():
+    passed_questions.to_csv("passed_questions.csv")
+    failed_questions.to_csv("failed_questions.csv")
 
 class Game(tk.Frame):
     def __init__(self, parent, controller):
@@ -88,8 +83,12 @@ class Game(tk.Frame):
             self.incorrect_button.pack()
             self.contador += 1
 
-
     def correct(self, question):
+        global passed_questions, failed_questions
+        passed_questions = pd.concat([passed_questions, pd.DataFrame([question])], ignore_index=True)
+        passed_questions = passed_questions.drop_duplicates()
+        if (failed_questions == question).all(axis=1).any():
+            failed_questions = failed_questions[~(failed_questions == question).all(axis=1)]            
         #TODO(Mafe)self.controller.correct_questions.append(question, ignore_index= True)
         print(f"Pregunta acertada: {question}")
         if self.contador < self.controller.amount_questions:
@@ -99,6 +98,9 @@ class Game(tk.Frame):
             self.back_button.pack(padx=10, pady=10)
 
     def incorrect(self, question):
+        global passed_questions, failed_questions
+        failed_questions = pd.concat([failed_questions, pd.DataFrame([question])], ignore_index=True)
+        failed_questions = failed_questions.drop_duplicates()
         #TODO(Mafe)self.controller.incorrect_questions.append(question, ignore_index= True)
         print(f"Pregunta fallada: {question}")
         if self.contador < self.controller.amount_questions:
@@ -106,7 +108,6 @@ class Game(tk.Frame):
         else:
             self.contador = 0
             self.back_button.pack(padx=10, pady=10)
-
 
     def cancel_game(self):
         self.second = 10
@@ -150,7 +151,6 @@ class QuestionSearch(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         
-
         self.search_label = tk.Label(self, text="Search", width=5, font=18)  
         self.search_label.grid(row=1, column=0, padx=2, pady=10)
 
@@ -204,6 +204,68 @@ class PlotDisplay(tk.Frame):
         back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub))
         back_button.pack(padx=10, pady=10)        
 
+class Review(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        play_button = tk.Button(
+            self,
+            text="Jugar",
+            command=lambda: controller.show_frame(PreReviewGame)
+        )
+        play_button.pack(padx=10, pady=10)
+        
+        graphs = tk.Button(
+            self,
+            text="Graficos",
+            command=lambda: controller.show_frame(Pregame),
+        )
+        graphs.pack(padx=10, pady=10)
+
+        back_button = tk.Button(
+            self,
+            text="Volver",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
+        
+class PreReviewGame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.questions_label = tk.Label(self, text="Cantidad de preguntas:")
+        self.questions_label.pack(pady=5)
+        self.entry_questions = tk.Entry(self)
+        self.entry_questions.pack(pady=5)
+        self.next_button = tk.Button(
+            self,
+            text="Siguiente",
+            command=lambda: self.start_game(controller),
+        )
+        self.next_button.pack(padx=10, pady=10)
+        back_button = tk.Button(
+            self,
+            text="Volver",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
+    
+    def start_game(self, controller):
+        controller.amount_questions = int(self.entry_questions.get())
+        controller.selected_questions = failed_questions.sample(controller.amount_questions)
+        controller.show_frame(Game)
+        controller.start_game()
+        
+class ReviewGame(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        
+        back_button = tk.Button(
+            self,
+            text="Terminar Juego",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
+
 class DataHub(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -249,6 +311,13 @@ class HomePage(tk.Frame):
         )
         play_button.pack(padx=10, pady=10)
 
+        review_button = tk.Button(
+            self,
+            text="Review",
+            command=lambda: controller.show_frame(Review),
+        )
+        review_button.pack(padx=10, pady=10)
+
         datahub_button = tk.Button(
             self,
             text="Centro de datos",
@@ -270,20 +339,33 @@ class HomePage(tk.Frame):
 class JT(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
         self.wm_title("Jeopardy Trainer!")
         self.geometry('1280x720')
         self.amount_questions = 0
         self.selected_questions = pd.DataFrame
-        self.correct_questions = pd.DataFrame
-        self.incorrect_questions = pd.DataFrame
+        
+        global passed_questions, failed_questions
+        try:
+            passed_questions = pd.read_csv("passed_questions.csv")
+            failed_questions = pd.read_csv("failed_questions.csv")
+        except pd.errors.EmptyDataError:
+            print("Error: The file is empty.")
+        except FileNotFoundError:
+            with open("passed_questions.csv", 'w'):
+                pass
+            with open("failed_questions.csv", 'w'):
+                pass
+            print("Error: File not found. Please check the file path and try again.")
+                    
+        #TODO load base data
+                    
         container = tk.Frame(self, height=720, width=1280)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay):
+        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay, Review, PreReviewGame):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -299,4 +381,5 @@ class JT(tk.Tk):
         
 if __name__ == "__main__":
     jt = JT()
+    jt.protocol("WM_DELETE_WINDOW", on_close)
     jt.mainloop()
