@@ -7,6 +7,8 @@ from JTparser import JTAnalysis
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 
+font = ("Arial", 16)
+
 filename = "Ningun archivo seleccionado"
 questions_columns = ['Category', 'Air Date', 'Question', 'Value', 'Answer', 'Round', 'Show Number']
 categories = pd.DataFrame()
@@ -15,8 +17,8 @@ passed_questions = pd.DataFrame(columns=questions_columns)
 failed_questions = pd.DataFrame(columns=questions_columns)
 
 def on_close(JT):
-    passed_questions.to_csv("passed_questions.csv")
-    failed_questions.to_csv("failed_questions.csv")
+    passed_questions.to_csv("passed_questions.csv", index=False)
+    failed_questions.to_csv("failed_questions.csv", index=False)
     JT.destroy()
     exit()
 
@@ -24,37 +26,40 @@ class Game(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.label = tk.Label(self, text="Que empiece el juego!")
+        self.label = tk.Label(self, text="Que empiece el juego!", font=font)
         self.label.pack(pady=5)
 
-        self.category = tk.Label(self, text="")
+        self.category = tk.Label(self, text="", font=font)
         self.category.pack()
-        self.question = tk.Label(self, text="")
+        self.question = tk.Label(self, text="", font=font)
         self.question.pack()
 
         self.contador = 0
         self.seconds = 10
-        self.timer = tk.Label(self, text=str(self.seconds))
+        self.timer = tk.Label(self, text=str(self.seconds), font=font)
         self.timer.pack(pady=5)
 
         self.current_question = ""
 
-        self.user_question = tk.Label(self, text="Acertó la pregunta?")
+        self.user_question = tk.Label(self, text="Acertó la pregunta?", font=font)
         self.correct_button = tk.Button(self,
             text="Sí",
             command=lambda: self.correct(self.current_question),
+            font=font
         )
         self.incorrect_button = tk.Button(self,
             text="No",
             command=lambda: self.incorrect(self.current_question),
+            font=font
         )
 
-        self.answer = tk.Label(self, text="")
+        self.answer = tk.Label(self, text="", font=font)
         
         self.back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: self.cancel_game(),
+            font=font
         )
     
     def start_game(self, contador):
@@ -93,8 +98,6 @@ class Game(tk.Frame):
         passed_questions = passed_questions.drop_duplicates()
         if (failed_questions == question).all(axis=1).any():
             failed_questions = failed_questions[~(failed_questions == question).all(axis=1)]            
-        #TODO(Mafe)self.controller.correct_questions.append(question, ignore_index= True)
-        print(f"Pregunta acertada: {question}")
         if self.contador < self.controller.amount_questions:
             self.start_game(self.contador)
         else:
@@ -105,8 +108,6 @@ class Game(tk.Frame):
         global passed_questions, failed_questions
         failed_questions = pd.concat([failed_questions, pd.DataFrame([question])], ignore_index=True)
         failed_questions = failed_questions.drop_duplicates()
-        #TODO(Mafe)self.controller.incorrect_questions.append(question, ignore_index= True)
-        print(f"Pregunta fallada: {question}")
         if self.contador < self.controller.amount_questions:
             self.start_game(self.contador)
         else:
@@ -128,20 +129,22 @@ class Game(tk.Frame):
 class Pregame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.questions_label = tk.Label(self, text="Cantidad de preguntas:")
+        self.questions_label = tk.Label(self, text="Cantidad de preguntas:", font=font)
         self.questions_label.pack(pady=5)
-        self.entry_questions = tk.Entry(self)
+        self.entry_questions = tk.Entry(self, font=font)
         self.entry_questions.pack(pady=5)
         self.next_button = tk.Button(
             self,
             text="Siguiente",
             command=lambda: self.start_game(controller),
+            font=font
         )
         self.next_button.pack(padx=10, pady=10)
         back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
     
@@ -155,16 +158,16 @@ class QuestionSearch(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         
-        self.search_label = tk.Label(self, text="Search", width=5, font=18)  
+        self.search_label = tk.Label(self, text="Search", width=5, font=14)  
         self.search_label.grid(row=1, column=0, padx=2, pady=10)
 
-        self.entry_box = tk.Entry(self, width=80, bg="white", font=18)
+        self.entry_box = tk.Entry(self, width=80, bg="white", font=14)
         self.entry_box.grid(row=1, column=2, padx=1)
 
-        self.search_button = tk.Button(self, text="Search", width=10, font=18, command=lambda: user_search())
+        self.search_button = tk.Button(self, text="Search", width=10, font=14, command=lambda: user_search())
         self.search_button.grid(row=1, column=3, padx=2)
 
-        self.back_button = tk.Button(self, text="Volver", width=10, font=18, command=lambda: controller.show_frame(DataHub))
+        self.back_button = tk.Button(self, text="Volver", width=10, font=14, command=lambda: controller.show_frame(DataHub))
         self.back_button.grid(row=1, column=4, padx=2)
 
         # Adapted from: https://stackoverflow.com/questions/48057591/cant-resize-treeview-with-grid-on-tkinter
@@ -204,8 +207,7 @@ class QuestionSearch(tk.Frame):
 class PlotDisplay(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        print(questions.to_string())
-        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub))
+        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub), font=font)
         back_button.pack(padx=10, pady=10)        
 
 class Review(tk.Frame):
@@ -215,28 +217,29 @@ class Review(tk.Frame):
         play_button = tk.Button(
             self,
             text="Jugar",
-            command=lambda: controller.show_frame(PreReviewGame)
+            command=lambda: controller.show_frame(PreReviewGame),
+            font=font
         )
         play_button.pack(padx=10, pady=10)
-        
         graphs = tk.Button(
             self,
             text="Grafico",
             command=lambda: controller.show_frame(ReviewGraph),
+            font=font
         )
         graphs.pack(padx=10, pady=10)
-
         back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
         
 class PreReviewGame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.questions_label = tk.Label(self, text="Cantidad de preguntas:")
+        self.questions_label = tk.Label(self, text="Cantidad de preguntas:", font=font)
         self.questions_label.pack(pady=5)
         self.entry_questions = tk.Entry(self)
         self.entry_questions.pack(pady=5)
@@ -244,12 +247,14 @@ class PreReviewGame(tk.Frame):
             self,
             text="Siguiente",
             command=lambda: self.start_game(controller),
+            font=font
         )
         self.next_button.pack(padx=10, pady=10)
         back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
     
@@ -263,24 +268,35 @@ class ReviewGraph(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.plot_circular_graph()
+        plot_button = tk.Button(
+            self,
+            text="Generar gráfico",
+            command=self.plot_circular_graph,
+            font=font
+        )
+        plot_button.pack(padx=10, pady=10)
         back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
         
     def plot_circular_graph(self):
         labels = ['Preguntas falladas', 'Preguntas acertadas']
-        size_failed_questions = len(failed_questions) * 100 / 2
-        size_passed_questions = len(passed_questions) * 100 / 2
+        size_failed_questions = int(len(failed_questions) * 100 / 2)
+        size_passed_questions = int(len(passed_questions) * 100 / 2)
+        if size_failed_questions == 0:
+            size_failed_questions = 1
+        if size_passed_questions == 0:
+            size_passed_questions = 1
         sizes = [size_failed_questions, size_passed_questions]  # Sizes as percentages
         colors = ['purple', 'red']
 
         fig, ax = plt.subplots()
         
-        ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
+        ax.pie(sizes, labels=labels, colors=colors)
         ax.set_title('Preguntas acertadas vs preguntas falladas')
 
         canvas = FigureCanvasTkAgg(fig, master=self)
@@ -295,6 +311,7 @@ class ReviewGame(tk.Frame):
             self,
             text="Terminar Juego",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
 
@@ -305,7 +322,8 @@ class DataHub(tk.Frame):
         question_search_button = tk.Button(
             self,
             text="Buscador de preguntas",
-            command=lambda: controller.show_frame(QuestionSearch)
+            command=lambda: controller.show_frame(QuestionSearch),
+            font=font
         )
         question_search_button.pack(padx=10, pady=5)
         
@@ -313,6 +331,7 @@ class DataHub(tk.Frame):
             self,
             text="Histograma de categorías",
             command=lambda: controller.show_frame(PlotDisplay),
+            font=font
         )
         category_histogram_button.pack(padx=10, pady=5)
         
@@ -320,6 +339,7 @@ class DataHub(tk.Frame):
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
+            font=font
         )
         back_button.pack(padx=10, pady=10)
 
@@ -328,32 +348,34 @@ class HomePage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.filename_var = tk.StringVar()
         self.filename_var.set(f'Archivo seleccionado: {filename}')
-        open_button = tk.Button(self, text="Open File", command=self.read_file)
+        open_button = tk.Button(self, text="Open File", command=self.read_file, font=font)
         open_button.pack(padx=10, pady=10)
         filename_label = tk.Label(self, 
                         textvariable=self.filename_var, 
                         anchor=tk.CENTER,                       
-                        justify=tk.CENTER,    
+                        justify=tk.CENTER,
+                        font=font    
                         )
         filename_label.pack(pady=20)
         play_button = tk.Button(
             self,
             text="Jugar",
             command=lambda: controller.show_frame(Pregame),
+            font=font
         )
         play_button.pack(padx=10, pady=10)
-
         review_button = tk.Button(
             self,
             text="Review",
             command=lambda: controller.show_frame(Review),
+            font=font
         )
         review_button.pack(padx=10, pady=10)
-
         datahub_button = tk.Button(
             self,
             text="Centro de datos",
             command=lambda: controller.show_frame(DataHub),
+            font=font
         )
         datahub_button.pack(padx=10, pady=10)
         
