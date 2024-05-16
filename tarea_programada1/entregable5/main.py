@@ -210,10 +210,10 @@ class QuestionSearch(tk.Frame):
 class PlotDisplay(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        back_button = tk.Button(self, text="Generar Gráficos", command= self.generate_plots)
+        back_button = tk.Button(self, text="Generar Gráficos", command= self.generate_plots, font=font)
         back_button.pack(padx=10, pady=10)
         
-        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub))
+        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub), font=font)
         back_button.pack(padx=10, pady=10)
 
     def generate_plots(self):
@@ -229,7 +229,7 @@ class PlotDisplay(tk.Frame):
         fig2 = Figure(figsize=(5, 4), dpi=100)
         plot2 = fig2.add_subplot(111)
         # Conversión de la columna 'Value' a valores numéricos
-        questions['Value'] = questions['Value'].replace('[\$,]', '', regex=True).astype(float)
+        questions['Value'] = questions['Value'].replace('[\\$,]', '', regex=True).astype(float)
         # Agrupación por categoría y cálculo del valor promedio
         category_values = questions.groupby('Category')['Value'].mean()
         plot2.bar(category_values.index, category_values.values)
@@ -276,7 +276,7 @@ class PreReviewGame(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.questions_label = tk.Label(self, text="Cantidad de preguntas:", font=font)
         self.questions_label.pack(pady=5)
-        self.entry_questions = tk.Entry(self)
+        self.entry_questions = tk.Entry(self, font=font)
         self.entry_questions.pack(pady=5)
         self.next_button = tk.Button(
             self,
