@@ -4,6 +4,8 @@ import os
 import pandas as pd
 from tkinter import ttk
 from JTparser import JTAnalysis
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 
 filename = "Ningun archivo seleccionado"
 questions_columns = ['Category', 'Air Date', 'Question', 'Value', 'Answer', 'Round', 'Show Number']
@@ -16,6 +18,7 @@ def on_close(JT):
     passed_questions.to_csv("passed_questions.csv")
     failed_questions.to_csv("failed_questions.csv")
     JT.destroy()
+    exit()
 
 class Game(tk.Frame):
     def __init__(self, parent, controller):
@@ -218,8 +221,8 @@ class Review(tk.Frame):
         
         graphs = tk.Button(
             self,
-            text="Graficos",
-            command=lambda: controller.show_frame(Pregame),
+            text="Grafico",
+            command=lambda: controller.show_frame(ReviewGraph),
         )
         graphs.pack(padx=10, pady=10)
 
@@ -255,6 +258,34 @@ class PreReviewGame(tk.Frame):
         controller.selected_questions = failed_questions.sample(controller.amount_questions)
         controller.show_frame(Game)
         controller.start_game()
+        
+class ReviewGraph(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.plot_circular_graph()
+        back_button = tk.Button(
+            self,
+            text="Volver",
+            command=lambda: controller.show_frame(HomePage),
+        )
+        back_button.pack(padx=10, pady=10)
+        
+    def plot_circular_graph(self):
+        labels = ['Preguntas falladas', 'Preguntas acertadas']
+        size_failed_questions = len(failed_questions) * 100 / 2
+        size_passed_questions = len(passed_questions) * 100 / 2
+        sizes = [size_failed_questions, size_passed_questions]  # Sizes as percentages
+        colors = ['purple', 'red']
+
+        fig, ax = plt.subplots()
+        
+        ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
+        ax.set_title('Preguntas acertadas vs preguntas falladas')
+
+        canvas = FigureCanvasTkAgg(fig, master=self)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
         
 class ReviewGame(tk.Frame):
     def __init__(self, parent, controller):
@@ -357,16 +388,14 @@ class JT(tk.Tk):
             with open("failed_questions.csv", 'w'):
                 pass
             print("Error: File not found. Please check the file path and try again.")
-                    
-        #TODO load base data
-                    
+                                        
         container = tk.Frame(self, height=720, width=1280)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay, Review, PreReviewGame):
+        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay, Review, PreReviewGame, ReviewGraph):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")

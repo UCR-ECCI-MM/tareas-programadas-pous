@@ -1,0 +1,523 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> file
+Rule 1     file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+Rule 2     categories -> TEXT
+Rule 3     categories -> NUMBER
+Rule 4     categories -> TEXT COMMA categories
+Rule 5     categories -> NUMBER COMMA categories
+Rule 6     questions -> question
+Rule 7     questions -> question COMMA questions
+Rule 8     question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+Rule 9     category -> CATEGORYLABEL COLON TEXT
+Rule 10    category -> CATEGORYLABEL COLON NUMBER
+Rule 11    category -> CATEGORYLABEL COLON VALUE
+Rule 12    answer -> ANSWERLABEL COLON TEXT
+Rule 13    answer -> ANSWERLABEL COLON NUMBER
+Rule 14    answer -> ANSWERLABEL COLON VALUE
+
+Terminals, with rules where they appear
+
+AIRDATE              : 8
+AIRDATELABEL         : 8
+ANSWERLABEL          : 12 13 14
+CATEGORIESLABEL      : 1
+CATEGORYLABEL        : 9 10 11
+COLON                : 1 1 8 8 8 8 8 9 10 11 12 13 14
+COMMA                : 1 4 5 7 8 8 8 8 8 8
+LBRACE               : 1 8
+LBRACKET             : 1 1
+NUMBER               : 3 5 8 10 13
+QUESTIONLABEL        : 8
+QUESTIONSLABEL       : 1
+RBRACE               : 1 8
+RBRACKET             : 1 1
+ROUND                : 8
+ROUNDLABEL           : 8
+SHOWNUMLABEL         : 8
+TEXT                 : 2 4 8 9 12
+VALUE                : 8 11 14
+VALUELABEL           : 8
+error                : 
+
+Nonterminals, with rules where they appear
+
+answer               : 8
+categories           : 1 4 5
+category             : 8
+file                 : 0
+question             : 6 7
+questions            : 1 7
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . file
+    (1) file -> . LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    LBRACE          shift and go to state 2
+
+    file                           shift and go to state 1
+
+state 1
+
+    (0) S' -> file .
+
+
+
+state 2
+
+    (1) file -> LBRACE . CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    CATEGORIESLABEL shift and go to state 3
+
+
+state 3
+
+    (1) file -> LBRACE CATEGORIESLABEL . COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    COLON           shift and go to state 4
+
+
+state 4
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON . LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    LBRACKET        shift and go to state 5
+
+
+state 5
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET . categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+    (2) categories -> . TEXT
+    (3) categories -> . NUMBER
+    (4) categories -> . TEXT COMMA categories
+    (5) categories -> . NUMBER COMMA categories
+
+    TEXT            shift and go to state 7
+    NUMBER          shift and go to state 8
+
+    categories                     shift and go to state 6
+
+state 6
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories . RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    RBRACKET        shift and go to state 9
+
+
+state 7
+
+    (2) categories -> TEXT .
+    (4) categories -> TEXT . COMMA categories
+
+    RBRACKET        reduce using rule 2 (categories -> TEXT .)
+    COMMA           shift and go to state 10
+
+
+state 8
+
+    (3) categories -> NUMBER .
+    (5) categories -> NUMBER . COMMA categories
+
+    RBRACKET        reduce using rule 3 (categories -> NUMBER .)
+    COMMA           shift and go to state 11
+
+
+state 9
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET . COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    COMMA           shift and go to state 12
+
+
+state 10
+
+    (4) categories -> TEXT COMMA . categories
+    (2) categories -> . TEXT
+    (3) categories -> . NUMBER
+    (4) categories -> . TEXT COMMA categories
+    (5) categories -> . NUMBER COMMA categories
+
+    TEXT            shift and go to state 7
+    NUMBER          shift and go to state 8
+
+    categories                     shift and go to state 13
+
+state 11
+
+    (5) categories -> NUMBER COMMA . categories
+    (2) categories -> . TEXT
+    (3) categories -> . NUMBER
+    (4) categories -> . TEXT COMMA categories
+    (5) categories -> . NUMBER COMMA categories
+
+    TEXT            shift and go to state 7
+    NUMBER          shift and go to state 8
+
+    categories                     shift and go to state 14
+
+state 12
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA . QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE
+
+    QUESTIONSLABEL  shift and go to state 15
+
+
+state 13
+
+    (4) categories -> TEXT COMMA categories .
+
+    RBRACKET        reduce using rule 4 (categories -> TEXT COMMA categories .)
+
+
+state 14
+
+    (5) categories -> NUMBER COMMA categories .
+
+    RBRACKET        reduce using rule 5 (categories -> NUMBER COMMA categories .)
+
+
+state 15
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL . COLON LBRACKET questions RBRACKET RBRACE
+
+    COLON           shift and go to state 16
+
+
+state 16
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON . LBRACKET questions RBRACKET RBRACE
+
+    LBRACKET        shift and go to state 17
+
+
+state 17
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET . questions RBRACKET RBRACE
+    (6) questions -> . question
+    (7) questions -> . question COMMA questions
+    (8) question -> . LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    LBRACE          shift and go to state 18
+
+    questions                      shift and go to state 19
+    question                       shift and go to state 20
+
+state 18
+
+    (8) question -> LBRACE . category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+    (9) category -> . CATEGORYLABEL COLON TEXT
+    (10) category -> . CATEGORYLABEL COLON NUMBER
+    (11) category -> . CATEGORYLABEL COLON VALUE
+
+    CATEGORYLABEL   shift and go to state 22
+
+    category                       shift and go to state 21
+
+state 19
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions . RBRACKET RBRACE
+
+    RBRACKET        shift and go to state 23
+
+
+state 20
+
+    (6) questions -> question .
+    (7) questions -> question . COMMA questions
+
+    RBRACKET        reduce using rule 6 (questions -> question .)
+    COMMA           shift and go to state 24
+
+
+state 21
+
+    (8) question -> LBRACE category . COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 25
+
+
+state 22
+
+    (9) category -> CATEGORYLABEL . COLON TEXT
+    (10) category -> CATEGORYLABEL . COLON NUMBER
+    (11) category -> CATEGORYLABEL . COLON VALUE
+
+    COLON           shift and go to state 26
+
+
+state 23
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET . RBRACE
+
+    RBRACE          shift and go to state 27
+
+
+state 24
+
+    (7) questions -> question COMMA . questions
+    (6) questions -> . question
+    (7) questions -> . question COMMA questions
+    (8) question -> . LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    LBRACE          shift and go to state 18
+
+    question                       shift and go to state 20
+    questions                      shift and go to state 28
+
+state 25
+
+    (8) question -> LBRACE category COMMA . AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    AIRDATELABEL    shift and go to state 29
+
+
+state 26
+
+    (9) category -> CATEGORYLABEL COLON . TEXT
+    (10) category -> CATEGORYLABEL COLON . NUMBER
+    (11) category -> CATEGORYLABEL COLON . VALUE
+
+    TEXT            shift and go to state 30
+    NUMBER          shift and go to state 31
+    VALUE           shift and go to state 32
+
+
+state 27
+
+    (1) file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE .
+
+    $end            reduce using rule 1 (file -> LBRACE CATEGORIESLABEL COLON LBRACKET categories RBRACKET COMMA QUESTIONSLABEL COLON LBRACKET questions RBRACKET RBRACE .)
+
+
+state 28
+
+    (7) questions -> question COMMA questions .
+
+    RBRACKET        reduce using rule 7 (questions -> question COMMA questions .)
+
+
+state 29
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL . COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COLON           shift and go to state 33
+
+
+state 30
+
+    (9) category -> CATEGORYLABEL COLON TEXT .
+
+    COMMA           reduce using rule 9 (category -> CATEGORYLABEL COLON TEXT .)
+
+
+state 31
+
+    (10) category -> CATEGORYLABEL COLON NUMBER .
+
+    COMMA           reduce using rule 10 (category -> CATEGORYLABEL COLON NUMBER .)
+
+
+state 32
+
+    (11) category -> CATEGORYLABEL COLON VALUE .
+
+    COMMA           reduce using rule 11 (category -> CATEGORYLABEL COLON VALUE .)
+
+
+state 33
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON . AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    AIRDATE         shift and go to state 34
+
+
+state 34
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE . COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 35
+
+
+state 35
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA . QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    QUESTIONLABEL   shift and go to state 36
+
+
+state 36
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL . COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COLON           shift and go to state 37
+
+
+state 37
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON . TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    TEXT            shift and go to state 38
+
+
+state 38
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT . COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 39
+
+
+state 39
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA . VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    VALUELABEL      shift and go to state 40
+
+
+state 40
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL . COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COLON           shift and go to state 41
+
+
+state 41
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON . VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    VALUE           shift and go to state 42
+
+
+state 42
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE . COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 43
+
+
+state 43
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA . answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+    (12) answer -> . ANSWERLABEL COLON TEXT
+    (13) answer -> . ANSWERLABEL COLON NUMBER
+    (14) answer -> . ANSWERLABEL COLON VALUE
+
+    ANSWERLABEL     shift and go to state 45
+
+    answer                         shift and go to state 44
+
+state 44
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer . COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 46
+
+
+state 45
+
+    (12) answer -> ANSWERLABEL . COLON TEXT
+    (13) answer -> ANSWERLABEL . COLON NUMBER
+    (14) answer -> ANSWERLABEL . COLON VALUE
+
+    COLON           shift and go to state 47
+
+
+state 46
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA . ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    ROUNDLABEL      shift and go to state 48
+
+
+state 47
+
+    (12) answer -> ANSWERLABEL COLON . TEXT
+    (13) answer -> ANSWERLABEL COLON . NUMBER
+    (14) answer -> ANSWERLABEL COLON . VALUE
+
+    TEXT            shift and go to state 49
+    NUMBER          shift and go to state 50
+    VALUE           shift and go to state 51
+
+
+state 48
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL . COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COLON           shift and go to state 52
+
+
+state 49
+
+    (12) answer -> ANSWERLABEL COLON TEXT .
+
+    COMMA           reduce using rule 12 (answer -> ANSWERLABEL COLON TEXT .)
+
+
+state 50
+
+    (13) answer -> ANSWERLABEL COLON NUMBER .
+
+    COMMA           reduce using rule 13 (answer -> ANSWERLABEL COLON NUMBER .)
+
+
+state 51
+
+    (14) answer -> ANSWERLABEL COLON VALUE .
+
+    COMMA           reduce using rule 14 (answer -> ANSWERLABEL COLON VALUE .)
+
+
+state 52
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON . ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    ROUND           shift and go to state 53
+
+
+state 53
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND . COMMA SHOWNUMLABEL COLON NUMBER RBRACE
+
+    COMMA           shift and go to state 54
+
+
+state 54
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA . SHOWNUMLABEL COLON NUMBER RBRACE
+
+    SHOWNUMLABEL    shift and go to state 55
+
+
+state 55
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL . COLON NUMBER RBRACE
+
+    COLON           shift and go to state 56
+
+
+state 56
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON . NUMBER RBRACE
+
+    NUMBER          shift and go to state 57
+
+
+state 57
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER . RBRACE
+
+    RBRACE          shift and go to state 58
+
+
+state 58
+
+    (8) question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE .
+
+    COMMA           reduce using rule 8 (question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE .)
+    RBRACKET        reduce using rule 8 (question -> LBRACE category COMMA AIRDATELABEL COLON AIRDATE COMMA QUESTIONLABEL COLON TEXT COMMA VALUELABEL COLON VALUE COMMA answer COMMA ROUNDLABEL COLON ROUND COMMA SHOWNUMLABEL COLON NUMBER RBRACE .)
+
