@@ -389,11 +389,25 @@ class HomePage(tk.Frame):
                 categories, questions = analysis.run(file_content)
                 filename = os.path.basename(file_path)
                 self.filename_var.set(f'Archivo seleccionado: {filename}')
-                
+
+class LogoPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.logo_path = "logo.png"
+        self.logo = tk.PhotoImage(file=self.logo_path)
+        self.logo_label = tk.Label(self, image=self.logo)
+        self.logo_label.pack()
+        self.after(2000, self.show_next_frame)
+        
+    def show_next_frame(self):
+        self.controller.show_frame(HomePage)
+
 class JT(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.wm_title("Jeopardy Trainer!")
+        self.wm_title("Jeopardy Trainer! (By Pous)")
+        self.iconbitmap("icon.ico")
         self.geometry('1280x720')
         self.amount_questions = 0
         self.selected_questions = pd.DataFrame
@@ -417,12 +431,12 @@ class JT(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay, Review, PreReviewGame, ReviewGraph):
+        for F in (LogoPage, HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay, Review, PreReviewGame, ReviewGraph):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(HomePage)
+        self.show_frame(LogoPage)
     
     def show_frame(self, cont):
         frame = self.frames[cont]
