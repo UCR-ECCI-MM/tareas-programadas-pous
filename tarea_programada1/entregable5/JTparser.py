@@ -22,9 +22,7 @@ class JTParser:
 
     def run(self, data):
         yacc.parse(data)
-        self.categories.create_series()
-        self.questions.create_dataframe()
-        return self.categories, self.questions
+        return self.categories.create_series(), self.questions.create_dataframe()
         
 class JTAnalysis(JTParser):
     tokens = (

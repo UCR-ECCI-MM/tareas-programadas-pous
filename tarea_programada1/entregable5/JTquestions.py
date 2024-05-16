@@ -40,6 +40,8 @@ class Questions():
         
     def create_dataframe(self):
         self.questions = pd.DataFrame(self.questions_data)
+        return self.questions
+
         
     def save_csv(self):
         # self.questions.to_excel("questions.xlsx", sheet_name="Sheet1")

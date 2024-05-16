@@ -118,8 +118,7 @@ class Game(tk.Frame):
         self.incorrect_button.pack_forget()
         self.back_button.pack_forget()
         self.controller.amount_question = 0
-        self.controller.show_frame(HomePage)
-            
+        self.controller.show_frame(HomePage)        
 
 class Pregame(tk.Frame):
     def __init__(self, parent, controller):
@@ -143,11 +142,10 @@ class Pregame(tk.Frame):
     
     def start_game(self, controller):
         controller.amount_questions = int(self.entry_questions.get())
-        controller.selected_questions = questions.questions.sample(controller.amount_questions)
+        controller.selected_questions = questions.sample(controller.amount_questions)
         controller.show_frame(Game)
         controller.start_game()
         
-
 class QuestionSearch(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -179,8 +177,8 @@ class QuestionSearch(tk.Frame):
             refresh_table(self)
             query = self.entry_box.get().strip()
             # Create a boolean mask for each row where any column contains the query
-            mask = questions.questions.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)
-            matched_questions = questions.questions[mask]
+            mask = questions.apply(lambda row: row.astype(str).str.contains(query, case=False).any(), axis=1)
+            matched_questions = questions[mask]
             
             self.table_tree["columns"] = list(matched_questions.columns)
             self.table_tree['show'] = 'headings'
@@ -199,6 +197,13 @@ class QuestionSearch(tk.Frame):
             self.columnconfigure(0, weight=1) # column with treeview
             self.rowconfigure(2, weight=1) # row with treeview 
         
+class PlotDisplay(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        print(questions.to_string())
+        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub))
+        back_button.pack(padx=10, pady=10)        
+
 class DataHub(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -213,7 +218,7 @@ class DataHub(tk.Frame):
         category_histogram_button = tk.Button(
             self,
             text="Histograma de categorías",
-            command=lambda: print("Funcionalidad del histograma de categorías"),
+            command=lambda: controller.show_frame(PlotDisplay),
         )
         category_histogram_button.pack(padx=10, pady=5)
         
@@ -223,7 +228,6 @@ class DataHub(tk.Frame):
             command=lambda: controller.show_frame(HomePage),
         )
         back_button.pack(padx=10, pady=10)
-
 
 class HomePage(tk.Frame):
     def __init__(self, parent, controller):
@@ -279,7 +283,7 @@ class JT(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch):
+        for F in (HomePage, Pregame, Game, DataHub, QuestionSearch, PlotDisplay):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
