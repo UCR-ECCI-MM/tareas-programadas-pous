@@ -24,33 +24,129 @@ def open_file(file_name):
 class Game(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        back_button = tk.Button(
+        self.controller = controller
+        self.label = tk.Label(self, text="Que empiece el juego!")
+        self.label.pack(pady=5)
+
+        self.category = tk.Label(self, text="")
+        self.category.pack()
+        self.question = tk.Label(self, text="")
+        self.question.pack()
+
+        self.contador = 0
+        self.seconds = 10
+        self.timer = tk.Label(self, text=str(self.seconds))
+        self.timer.pack(pady=5)
+
+        self.current_question = ""
+
+        self.user_question = tk.Label(self, text="Acertó la pregunta?")
+        self.correct_button = tk.Button(self,
+            text="Sí",
+            command=lambda: self.correct(self.current_question),
+        )
+        self.incorrect_button = tk.Button(self,
+            text="No",
+            command=lambda: self.incorrect(self.current_question),
+        )
+
+        self.answer = tk.Label(self, text="")
+        
+        self.back_button = tk.Button(
             self,
             text="Volver",
-            command=lambda: controller.show_frame(HomePage),
+            command=lambda: self.cancel_game(),
         )
-        back_button.pack(padx=10, pady=10)
+    
+    def start_game(self, contador):
+        self.seconds = 10
+        self.current_question = self.controller.selected_questions.iloc[contador]
+        self.show_question(self.current_question)
+    
+    def show_question(self, question):
+        self.category.config(text=f"{question.Category}")
+        self.question.config(text=f"{question.Question}")
+        self.answer.config(text=f"RESPUESTA: {question.Answer}")
+
+        self.set_timer()
+        
+        self.user_question.pack_forget()
+        self.correct_button.pack_forget()
+        self.incorrect_button.pack_forget()
+        self.answer.pack_forget()
+
+    def set_timer(self):
+        if self.seconds > 0:
+            self.timer.config(text=f"Temporizador: {self.seconds}")
+            self.seconds -= 1
+            self.controller.after(1000, self.set_timer)
+        else:
+            self.seconds = 10
+            self.answer.pack()
+            self.user_question.pack()
+            self.correct_button.pack()
+            self.incorrect_button.pack()
+            self.contador += 1
+
+
+    def correct(self, question):
+        #TODO(Mafe)self.controller.correct_questions.append(question, ignore_index= True)
+        print(f"Pregunta acertada: {question}")
+        if self.contador < self.controller.amount_questions:
+            self.start_game(self.contador)
+        else:
+            self.contador = 0
+            self.back_button.pack(padx=10, pady=10)
+
+    def incorrect(self, question):
+        #TODO(Mafe)self.controller.incorrect_questions.append(question, ignore_index= True)
+        print(f"Pregunta fallada: {question}")
+        if self.contador < self.controller.amount_questions:
+            self.start_game(self.contador)
+        else:
+            self.contador = 0
+            self.back_button.pack(padx=10, pady=10)
+
+
+    def cancel_game(self):
+        self.second = 10
+        self.category.config(text="")
+        self.question.config(text="")
+        self.contador = 0
+        self.user_question.pack_forget()
+        self.correct_button.pack_forget()
+        self.incorrect_button.pack_forget()
+        self.back_button.pack_forget()
+        self.controller.amount_question = 0
+        self.controller.show_frame(HomePage)
+            
 
 class Pregame(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        questions_label = tk.Label(self, text="Cantidad de preguntas:")
-        questions_label.pack(pady=5)
-        entry_questions = tk.Entry(self)
-        entry_questions.pack(pady=5)
-        next_button = tk.Button(
+        self.questions_label = tk.Label(self, text="Cantidad de preguntas:")
+        self.questions_label.pack(pady=5)
+        self.entry_questions = tk.Entry(self)
+        self.entry_questions.pack(pady=5)
+        self.next_button = tk.Button(
             self,
             text="Siguiente",
-            command=lambda: controller.show_frame(Game),
+            command=lambda: self.start_game(controller),
         )
-        next_button.pack(padx=10, pady=10)
+        self.next_button.pack(padx=10, pady=10)
         back_button = tk.Button(
             self,
             text="Volver",
             command=lambda: controller.show_frame(HomePage),
         )
         back_button.pack(padx=10, pady=10)
-
+    
+    def start_game(self, controller):
+        controller.amount_questions = int(self.entry_questions.get())
+        controller.selected_questions = questions.questions.sample(controller.amount_questions)
+        controller.show_frame(Game)
+        controller.start_game()
+        
 
 class QuestionSearch(tk.Frame):
     def __init__(self, parent, controller):
@@ -173,6 +269,10 @@ class JT(tk.Tk):
 
         self.wm_title("Jeopardy Trainer!")
         self.geometry('1280x720')
+        self.amount_questions = 0
+        self.selected_questions = pd.DataFrame
+        self.correct_questions = pd.DataFrame
+        self.incorrect_questions = pd.DataFrame
         container = tk.Frame(self, height=720, width=1280)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -189,6 +289,9 @@ class JT(tk.Tk):
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+
+    def start_game(self):
+        self.frames[Game].start_game(0)
         
 if __name__ == "__main__":
     jt = JT()
