@@ -12,9 +12,10 @@ questions = pd.DataFrame(columns=questions_columns)
 passed_questions = pd.DataFrame(columns=questions_columns)
 failed_questions = pd.DataFrame(columns=questions_columns)
 
-def on_close():
+def on_close(JT):
     passed_questions.to_csv("passed_questions.csv")
     failed_questions.to_csv("failed_questions.csv")
+    JT.destroy()
 
 class Game(tk.Frame):
     def __init__(self, parent, controller):
@@ -381,5 +382,5 @@ class JT(tk.Tk):
         
 if __name__ == "__main__":
     jt = JT()
-    jt.protocol("WM_DELETE_WINDOW", on_close)
+    jt.protocol("WM_DELETE_WINDOW", lambda: on_close(jt))
     jt.mainloop()
