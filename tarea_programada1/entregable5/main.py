@@ -1,3 +1,5 @@
+# Copyright [2024] <Maria Fernanda Andres, Fabian Calvo & Andres Quesada Gonzalez>
+
 import tkinter as tk
 from tkinter import filedialog
 import os
@@ -6,6 +8,7 @@ from tkinter import ttk
 from JTparser import JTAnalysis
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 
 font = ("Arial", 16)
 
@@ -207,8 +210,40 @@ class QuestionSearch(tk.Frame):
 class PlotDisplay(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub), font=font)
-        back_button.pack(padx=10, pady=10)        
+        back_button = tk.Button(self, text="Generar Gráficos", command= self.generate_plots)
+        back_button.pack(padx=10, pady=10)
+        
+        back_button = tk.Button(self, text="Volver", command=lambda: controller.show_frame(DataHub))
+        back_button.pack(padx=10, pady=10)
+
+    def generate_plots(self):
+        fig1 = Figure(figsize=(5, 4), dpi=100)
+        plot1 = fig1.add_subplot(111)
+        # Conteo de la frecuencia de cada categoría
+        category_counts = categories.value_counts()
+        plot1.bar(category_counts.index, category_counts.values)
+        plot1.set_title('Frecuencia de Categorías')
+        plot1.set_xlabel('Categoría')
+        plot1.set_ylabel('Frecuencia')
+
+        fig2 = Figure(figsize=(5, 4), dpi=100)
+        plot2 = fig2.add_subplot(111)
+        # Conversión de la columna 'Value' a valores numéricos
+        questions['Value'] = questions['Value'].replace('[\$,]', '', regex=True).astype(float)
+        # Agrupación por categoría y cálculo del valor promedio
+        category_values = questions.groupby('Category')['Value'].mean()
+        plot2.bar(category_values.index, category_values.values)
+        plot2.set_title('Valor Promedio de Preguntas por Categoría')
+        plot2.set_xlabel('Categoría')
+        plot2.set_ylabel('Valor Promedio ($)')
+        
+        canvas1 = FigureCanvasTkAgg(fig1, self)
+        canvas1.draw()
+        canvas1.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+        canvas2 = FigureCanvasTkAgg(fig2, self)
+        canvas2.draw()
+        canvas2.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH, expand=True)       
 
 class Review(tk.Frame):
     def __init__(self, parent, controller):
@@ -329,7 +364,7 @@ class DataHub(tk.Frame):
         
         category_histogram_button = tk.Button(
             self,
-            text="Histograma de categorías",
+            text="Gráficos sobre los datos",
             command=lambda: controller.show_frame(PlotDisplay),
             font=font
         )
