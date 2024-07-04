@@ -1,6 +1,7 @@
 from deliveryman_problem import generate_coordinates, plot_route, solve_deliveryman_problem
 from brute_force_dp import brute_force
 from nearest_neighbor_dp import nearest_neighbor_heuristic
+from simulated_annealing_dp import simulated_annealing_metaheuristic
 
 if __name__ == '__main__':
     distance_matrix = [
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     
     # Solve using brute force
     method = 'bf'
-    best_route, min_distance = solve_deliveryman_problem(method, distance_matrix, priority_nodes, nodes_to_remove, brute_force_fn=brute_force, nearest_neighbor_fn=nearest_neighbor_heuristic)
+    best_route, min_distance = solve_deliveryman_problem(method, distance_matrix, priority_nodes, nodes_to_remove, brute_force_fn=brute_force)
     if best_route:
         print(f"Brute Force - Best route: {best_route}")
         print(f"Minimum distance: {min_distance}")
@@ -33,7 +34,17 @@ if __name__ == '__main__':
 
     # Solve using nearest neighbor heuristic
     method = 'nn'
-    best_route, min_distance = solve_deliveryman_problem(method, distance_matrix, priority_nodes, nodes_to_remove, brute_force_fn=brute_force, nearest_neighbor_fn=nearest_neighbor_heuristic)
+    best_route, min_distance = solve_deliveryman_problem(method, distance_matrix, priority_nodes, nodes_to_remove, nearest_neighbor_fn=nearest_neighbor_heuristic)
+    if best_route:
+        print(f"Nearest Neighbor - Best route: {best_route}")
+        print(f"Minimum distance: {min_distance}")
+        plot_route(best_route, distance_matrix, coordinates)
+    else:
+        print("No valid route found for Nearest Neighbor.")
+
+    # Solve using simulated annealing
+    method = 'sa'
+    best_route, min_distance = solve_deliveryman_problem(method, distance_matrix, priority_nodes, nodes_to_remove, simulated_annealing_fn=simulated_annealing_metaheuristic)
     if best_route:
         print(f"Nearest Neighbor - Best route: {best_route}")
         print(f"Minimum distance: {min_distance}")

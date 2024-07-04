@@ -41,10 +41,12 @@ def plot_route(route, distance_matrix, coordinates):
     plt.grid(True)
     plt.show()
 
-def solve_deliveryman_problem(method, distance_matrix, priority_nodes=[], nodes_to_remove=[], brute_force_fn=None, nearest_neighbor_fn=None):
+def solve_deliveryman_problem(method, distance_matrix, priority_nodes=[], nodes_to_remove=[], brute_force_fn=None, nearest_neighbor_fn=None, simulated_annealing_fn=None):
     if method == 'bf':
         return brute_force_fn(distance_matrix, priority_nodes, nodes_to_remove)
     elif method == 'nn':
         return nearest_neighbor_fn(distance_matrix, priority_nodes)
+    elif method == 'sa':
+        return simulated_annealing_fn(distance_matrix, priority_nodes, nodes_to_remove)
     else:
-        raise ValueError("Invalid method. Use 'bf' for brute force or 'nn' for nearest neighbor heuristic.")
+        raise ValueError("Invalid method. Use 'bf' for brute force, 'nn' for nearest neighbor heuristic or 'sa' for simulated annealing metaheuristic")
