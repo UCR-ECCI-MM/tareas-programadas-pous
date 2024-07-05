@@ -2,9 +2,11 @@
 # Copyright [2024] <Maria Fernanda Andres, Fabian Calvo & Andres Quesada Gonzalez>
 # ------------------------------------------------------------
 
+import time
 from deliveryman_problem import calculate_total_distance
 
 def nearest_neighbor_heuristic(distance_matrix, priority_nodes=[], nodes_to_remove=[]):
+    start_time = time.time()
     num_nodes = len(distance_matrix)
     nodes = set(range(num_nodes)) - set(nodes_to_remove) - {0}
     
@@ -32,7 +34,7 @@ def nearest_neighbor_heuristic(distance_matrix, priority_nodes=[], nodes_to_remo
             current_node = nearest_neighbor
 
     # Return to the starting node (factory)
-    visited.append(0)
     total_distance = calculate_total_distance(visited, distance_matrix)
-    
-    return visited, total_distance
+    end_time = time.time()
+    duration_ms = (end_time - start_time) * 1000
+    return visited, total_distance, duration_ms

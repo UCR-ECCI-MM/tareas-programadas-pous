@@ -1,8 +1,10 @@
 import random
 import math
+import time
 from deliveryman_problem import calculate_total_distance
 
 def simulated_annealing_metaheuristic(distance_matrix, priority_nodes, nodes_to_remove, initial_temperature=1000.0, cooling_rate=0.01, stopping_temperature=1e-5, max_iterations=1000):
+    start_time = time.time()
     num_nodes = len(distance_matrix)
     all_nodes = list(range(num_nodes))
     
@@ -34,4 +36,6 @@ def simulated_annealing_metaheuristic(distance_matrix, priority_nodes, nodes_to_
 
     best_order = current_order
     best_distance = current_distance
-    return best_order, best_distance
+    end_time = time.time()
+    duration_ms = (end_time - start_time) * 1000
+    return best_order, best_distance, duration_ms

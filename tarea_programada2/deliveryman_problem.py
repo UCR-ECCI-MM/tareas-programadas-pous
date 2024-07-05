@@ -45,7 +45,7 @@ def solve_deliveryman_problem(method, distance_matrix, priority_nodes=[], nodes_
     if method == 'bf':
         return brute_force_fn(distance_matrix, priority_nodes, nodes_to_remove)
     elif method == 'nn':
-        return nearest_neighbor_fn(distance_matrix, priority_nodes)
+        return nearest_neighbor_fn(distance_matrix, priority_nodes, nodes_to_remove)
     elif method == 'sa':
         return simulated_annealing_fn(distance_matrix, priority_nodes, nodes_to_remove)
     else:
